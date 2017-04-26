@@ -2,4 +2,5 @@
 $LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
 
 require 'jenkins_statistics'
-JenkinsStatistics.generate
+
+JenkinsStatistics.run(:update_dashboard)

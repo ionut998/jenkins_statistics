@@ -1,51 +1,33 @@
 require 'json'
 require 'net/http'
+require 'active_support/all'
+
 require './lib/data_fetcher'
 require './lib/dashboard_updater'
 
-require './lib/reports/ci_report_base'
-require './lib/reports/ci_passing_rate_report'
-require './lib/reports/ci_flaky_tests_report'
-require './lib/reports/ci_slowest_tests_report'
-require './lib/reports/ci_time_broken_report'
-require './lib/reports/ci_broken_by_report'
-
+Dir.glob(File.join('.', 'lib', 'jobs', '*.rb'), &method(:require))
 
 
 class JenkinsStatistics
+  SERVICES = {
+    env: ENV,
+    db: nil,
+  }
 
-  REPORTS =
-  [
-    {
-      projects_names: ENV.fetch('TIME_BROKEN_REPORT_PROJECTS'),
-      class_name: CITimeBrokenReport,
-    },
-    {
-      projects_names: ENV.fetch('PASSING_RATE_REPORT_PROJECTS'),
-      class_name: CIPassingRateReport,
-    },
-    {
-      projects_names: ENV.fetch('SLOWEST_TESTS_REPORT_PROJECTS'),
-      class_name: CISlowestTestsReport,
-    },
-    {
-      projects_names: ENV.fetch('FLAKY_TESTS_REPORT_PROJECTS'),
-      class_name: CIFlakyTestsReport,
-    },
-    {
-      projects_names: ENV.fetch('BROKEN_BY_REPORT_PROJECTS'),
-      class_name: CiBrokenByReport,
-    },
-  ]
-
-  def self.generate
-    # TODO: remove duplication and find a way of accessing ci only one per project
-
-    REPORTS.each do |report|
-      report[:projects_names].split(',').each do |project_name|
-        report_generator = report[:class_name].new(project_name)
-        report_generator.present
-      end
+  def self.run(*jobs)
+    jobs.each do |job_name|
+      job_class = job_name.to_s.classify.constantize
+      inject_dependecies(job_class.new).run
     end
   end
+
+  def self.inject_dependecies(job)
+    arguments = job.method(:init).parameters.map do |(_, name)|
+      SERVICES[name]
+    end
+    job.init(*arguments)
+    job
+  end
+
+  private_class_method :inject_dependecies
 end
