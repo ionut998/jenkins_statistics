@@ -1,10 +1,10 @@
-require './lib/job'
-require './lib/reports/ci_report_base'
-require './lib/reports/ci_passing_rate_report'
-require './lib/reports/ci_flaky_tests_report'
-require './lib/reports/ci_slowest_tests_report'
-require './lib/reports/ci_time_broken_report'
-require './lib/reports/ci_broken_by_report'
+require 'job'
+require 'reports/ci_report_base'
+require 'reports/ci_passing_rate_report'
+require 'reports/ci_flaky_tests_report'
+require 'reports/ci_slowest_tests_report'
+require 'reports/ci_time_broken_report'
+require 'reports/ci_broken_by_report'
 
 
 class UpdateDashboard < Job
