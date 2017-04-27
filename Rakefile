@@ -27,7 +27,7 @@ namespace :db do
   desc 'Run migrations'
   task :migrate, [:version] => [:env] do |_t, args|
     Sequel.extension :migration
-    db = JenkinsStatistics.lookup(:db)
+    db = StatsDb::CONNECTION
     db.extension :pg_advisory_locking
     migration_lock_key = 2_053_462_845 * Zlib.crc32(db.get(Sequel.function('current_database')))
     got_lock = db.try_advisory_lock(migration_lock_key) do

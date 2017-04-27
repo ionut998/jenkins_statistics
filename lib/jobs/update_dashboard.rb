@@ -38,7 +38,7 @@ class UpdateDashboard < Job
     ]
   end
 
-  def run
+  def run(projects: [])
     # TODO: remove duplication and find a way of accessing ci only one per project
 
     reports.each do |report|
