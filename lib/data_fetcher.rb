@@ -35,7 +35,7 @@ class DataFetcher
     DataFetcher.http_get(base_url + '/api/json')
   end
 
-  def each_build(&block)
+  def each_build
     all_builds.each do |build|
       yield DataFetcher.http_get("#{build['url']}api/json")
     end

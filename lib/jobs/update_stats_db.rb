@@ -19,15 +19,19 @@ class UpdateStatsDb < Job
   def process_build(project, build_json)
     print '.'
     return unless project.builds_dataset.where(id: build_json['id'].to_i).empty?
-    rspec_json = DataFetcher::retrieve_rspec_json(build_json)
-    build = project.add_build(
+    rspec_json = DataFetcher.retrieve_rspec_json(build_json)
+    build = project.add_build(build_record_attributes(build_json, rspec_json))
+    process_rspec_json(project, build, rspec_json)
+  end
+
+  def build_record_attributes(build_json, rspec_json)
+    {
       id: build_json['id'].to_i,
       result: build_json['result'].downcase,
       document: build_json,
       rspec_json: rspec_json,
       timestamp: DateTime.strptime((build_json['timestamp'] / 1000).to_s, '%s'),
-    )
-    process_rspec_json(project, build, rspec_json)
+    }
   end
 
   def process_rspec_json(project, build, rspec_json)
