@@ -10,7 +10,7 @@ class StatsDb
 
   class Build < Sequel::Model
     unrestrict_primary_key
-    many_to_one :builds
+    many_to_one :project
     one_to_many :spec_case_runs
   end
 

@@ -41,14 +41,6 @@ class DataFetcher
     end
   end
 
-  def each_build_with_rspec(&block)
-    all_builds.each do |build|
-      doc = DataFetcher.http_get("#{build['url']}api/json")
-      rspec_json = DataFetcher.http_get(doc['url'] + 'artifact/rspec.json')
-      yield doc, rspec_json
-    end
-  end
-
   private
 
   def build_data

@@ -5,6 +5,10 @@ gem 'sequel'
 gem 'sequel-pg_advisory_locking'
 gem 'pg'
 gem 'rake'
+gem 'sinatra'
+gem 'slim'
+gem 'puma'
+
 gem 'codeclimate-test-reporter', group: :test, require: nil
 
 group :development, :test do
